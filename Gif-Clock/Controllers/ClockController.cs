@@ -13,10 +13,8 @@ namespace GifClock.Controllers
     {
         public HttpResponseMessage Get()
         {
-            var gifStream = new GifStream();
-
             var response = Request.CreateResponse();
-            Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
+            Action<Stream, HttpContent, TransportContext> writeToStream = GifStream.WriteToStream;
             response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("text/plain"));
 
             return response;
