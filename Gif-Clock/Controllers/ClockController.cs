@@ -17,7 +17,7 @@ namespace GifClock.Controllers
 
             var response = Request.CreateResponse();
             Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
-            response.Content = new PushStreamContent(writeToStream);
+            response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("application/octet-stream"));
 
             return response;
         }
