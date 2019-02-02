@@ -13,14 +13,18 @@ namespace GifClock
     {
         public async void WriteToStream(Stream gifStream, HttpContent content, TransportContext context)
         {
-            var buffer = new byte[1];
+            var buffer = new byte[100];
 
             try
             {
-                for (int i = 0; i < 256; i++)
+                //10 minutes of loop, 500mb total transferred
+                for (int e = 0; e < 600; e++)
                 {
-                    buffer[0] = (byte)i;
-                    await gifStream.WriteAsync(buffer, 0, 1);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        buffer[i] = (byte)(i+50);
+                    }
+                    await gifStream.WriteAsync(buffer, 0, 100);
                     Thread.Sleep(1000);
                 }
             }
