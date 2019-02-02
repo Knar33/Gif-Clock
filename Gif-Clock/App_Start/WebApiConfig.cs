@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace Gif_Clock
+namespace GifClock
 {
     public static class WebApiConfig
     {
@@ -16,8 +16,8 @@ namespace Gif_Clock
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                routeTemplate: "{controller}/{id}",
+                defaults: new { controller = "gif", id = RouteParameter.Optional }
             );
         }
     }
