@@ -11,18 +11,27 @@ namespace GifClock
 {
     public class GifStream
     {
-        public async void WriteToStream(Stream outputStream, HttpContent content, TransportContext context)
+        public async void WriteToStream(Stream gifStream, HttpContent content, TransportContext context)
         {
-            var buffer = new byte[10];
+            var buffer = new byte[1];
 
-            while (true)
+            try
             {
-                buffer[0] = 0;
-                buffer[1] = 1;
-                buffer[2] = 2;
-                await outputStream.WriteAsync(buffer, 0, 10);
-                Thread.Sleep(1000);
-            } 
+                for (int i = 0; i < 256; i++)
+                {
+                    buffer[0] = (byte)i;
+                    await gifStream.WriteAsync(buffer, 0, 1);
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                gifStream.Close();
+            }
         }
     }
 }
