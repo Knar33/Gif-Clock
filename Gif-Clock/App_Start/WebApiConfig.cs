@@ -17,7 +17,7 @@ namespace GifClock
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{controller}/{id}",
-                defaults: new { controller = "gif", id = RouteParameter.Optional }
+                defaults: new { controller = "Clock", id = RouteParameter.Optional }
             );
         }
     }
