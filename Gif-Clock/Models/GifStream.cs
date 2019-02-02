@@ -33,7 +33,7 @@ namespace GifClock
             }
             catch (Exception ex)
             {
-
+                //ShakeItOff(ex);
             }
             finally
             {
