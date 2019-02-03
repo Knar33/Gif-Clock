@@ -15,6 +15,10 @@ namespace GifClock
 
         public GifEncoder(Stream inputStream, int width, int height, List<Color> globalColorTable)
         {
+            if (globalColorTable.Count() > 256)
+            {
+                globalColorTable = globalColorTable.Take(256).ToList();
+            }
             gifStream = inputStream;
             //Header
             Task.Run(() => WriteString("GIF89a")).Wait();
