@@ -4,8 +4,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace BumpKit
+namespace GifClock
 {
     public class GifEncoder
     {
@@ -15,8 +17,13 @@ namespace BumpKit
         {
             gifStream = inputStream;
             //Encode header
+            Task.Run(() => WriteString("GIF89a")).Wait();
             //Logican Screen Descriptor
             //Global Color Table
+        }
+
+        public async Task AddFrame(Image frame)
+        {
         }
 
         private void WriteByte(int value)
@@ -30,7 +37,7 @@ namespace BumpKit
             gifStream.WriteByte(Convert.ToByte((value >> 8) & 0xff));
         }
 
-        private async void WriteString(string value)
+        private async Task WriteString(string value)
         {
             await gifStream.WriteAsync(value.ToArray().Select(c => (byte)c).ToArray(), 0, value.Length);
         }
