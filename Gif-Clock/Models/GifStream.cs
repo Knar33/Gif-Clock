@@ -16,7 +16,11 @@ namespace GifClock
         {
             try
             {
-                GifEncoder encoder = new GifEncoder(outputStream, 1, 1, new List<Color>());
+                List<Color> globalColorTable = new List<Color>();
+                globalColorTable.Add(Color.FromArgb(0, 0, 0));
+                globalColorTable.Add(Color.FromArgb(255, 255, 255));
+
+                GifEncoder encoder = new GifEncoder(outputStream, 1, 1, globalColorTable);
                 while (true)
                 {
                     //Generate clock Image frame
