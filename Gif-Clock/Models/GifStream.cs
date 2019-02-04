@@ -20,8 +20,10 @@ namespace GifClock
                 globalColorTable.Add(Color.FromArgb(0, 0, 0));
                 globalColorTable.Add(Color.FromArgb(255, 255, 255));
 
-                GifEncoder encoder = new GifEncoder(outputStream, 1, 1, globalColorTable);
-
+                GifEncoder encoder = new GifEncoder(outputStream, 100, 100, globalColorTable);
+                //var white = Image.FromFile(@"C:\Users\Andrew\Documents\GitHub\Gif-Clock\white.png");
+                //await encoder.AddFrame(white, 0, 0);
+                //outputStream.WriteByte(0x3B);
                 while (true)
                 {
                     //Generate clock Image frame
