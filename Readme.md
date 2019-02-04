@@ -7,6 +7,7 @@ The idea of the GIF Clock is to create an endless streaming GIF with .NET MVC wh
 * Split the GIF Encoder into two pieces, and combine with the endless byte stream: The first part will be the static header of the GIF format. The second part will loop infinitely and generate the current frame, then sleep for the remainder of the frame time (1 second).
 * Adjust for both time accuracy, as well as concurrency. The time displayed on the GIF clock should not stray more than 1 whole second within a 10 minute window. Many users shoulb be able to access the GIF clock at the same time without affecting performance.
 * Reduce size of each frame. Saving from the Image class to Gif uses the max size local color table every frame, which is wasteful.
+* Add timezone functionality
 
 Articles that have been helpful:
 * https://www.strathweb.com/2013/01/asynchronously-streaming-video-with-asp-net-web-api/
