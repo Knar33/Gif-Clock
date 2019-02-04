@@ -79,8 +79,38 @@ namespace GifClock
             }
         }
 
-        public async Task AddFrame(Image frame)
+        public async Task AddFrame(Image frame, int x, int y)
         {
+            using (var gifStream = new MemoryStream())
+            {
+                frame.Save(gifStream, ImageFormat.Gif);
+                gifStream.Position = 789; 
+                var header = new byte[11];
+                gifStream.Read(header, 0, header.Length);
+                WriteByte(header[0]);
+                WriteShort(x);
+                WriteShort(y);
+                WriteShort(frame.Height);
+                WriteShort(frame.Width);
+                WriteByte(header[9] & 0x07 | 0x07);
+                WriteByte(header[10]); //LZW
+
+                // Read/Write image data
+                gifStream.Position = 800;
+                var dataLength = gifStream.ReadByte();
+                while (dataLength > 0)
+                {
+                    var imgData = new byte[dataLength];
+                    gifStream.Read(imgData, 0, dataLength);
+
+                    gifStream.WriteByte(Convert.ToByte(dataLength));
+                    gifStream.Write(imgData, 0, dataLength);
+                    dataLength = gifStream.ReadByte();
+                }
+
+                gifStream.WriteByte(0); // Terminator
+            }
+            
         }
 
         private void WriteByte(int value)

@@ -15,7 +15,7 @@ namespace GifClock.Controllers
         {
             var response = Request.CreateResponse();
             Action<Stream, HttpContent, TransportContext> writeToStream = GifStream.WriteToStream;
-            response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("text/plain"));
+            response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("image/gif"));
 
             return response;
         }
