@@ -11,7 +11,7 @@ namespace GifClock
 {
     public class GifEncoder
     {
-        public Stream gifStream { get; set; }
+        public Stream GifStream { get; set; }
         private List<Color> GlobalColorTable { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
@@ -21,7 +21,7 @@ namespace GifClock
             //TODO: allow no globalColorTable to be passed in?
             Width = width;
             Height = height;
-            gifStream = inputStream;
+            GifStream = inputStream;
             if (globalColorTable.Count > 256)
             {
                 globalColorTable = globalColorTable.Take(256).ToList();
@@ -81,52 +81,64 @@ namespace GifClock
 
         public async Task AddFrame(Image frame, int x, int y)
         {
-            using (var gifStream = new MemoryStream())
+            using (var sourceGif = new MemoryStream())
             {
-                frame.Save(gifStream, ImageFormat.Gif);
-                gifStream.Position = 789; //Position of the Image Descriptor
+                frame.Save(sourceGif, ImageFormat.Gif);
+                sourceGif.Position = 789; //Position of the Image Descriptor
                 var header = new byte[11];
-                gifStream.Read(header, 0, header.Length);
+                sourceGif.Read(header, 0, header.Length);
                 WriteByte(header[0]);
                 WriteShort(x);
                 WriteShort(y);
                 WriteShort(frame.Height);
                 WriteShort(frame.Width);
-                WriteByte(header[9] & 0x07 | 0x07);
+
+                sourceGif.Position = 10;
+                WriteByte(sourceGif.ReadByte() & 0x3f | 0x80); // Enabling local color table
+                WriteColorTable(sourceGif);
+
                 WriteByte(header[10]); //LZW
 
                 // Read/Write image data
-                gifStream.Position = 800;
-                var dataLength = gifStream.ReadByte();
+                sourceGif.Position = 800;
+                var dataLength = sourceGif.ReadByte();
                 while (dataLength > 0)
                 {
                     var imgData = new byte[dataLength];
-                    gifStream.Read(imgData, 0, dataLength);
+                    sourceGif.Read(imgData, 0, dataLength);
 
-                    gifStream.WriteByte(Convert.ToByte(dataLength));
-                    await gifStream.WriteAsync(imgData, 0, dataLength);
-                    dataLength = gifStream.ReadByte();
+                    GifStream.WriteByte(Convert.ToByte(dataLength));
+                    await GifStream.WriteAsync(imgData, 0, dataLength);
+                    dataLength = sourceGif.ReadByte();
                 }
 
-                gifStream.WriteByte(0); // Terminator
+                GifStream.WriteByte(0); // Terminator
             }
-            
+
+        }
+
+        private void WriteColorTable(Stream sourceGif)
+        {
+            sourceGif.Position = 13; // Locating the image color table
+            var colorTable = new byte[768];
+            sourceGif.Read(colorTable, 0, colorTable.Length);
+            GifStream.Write(colorTable, 0, colorTable.Length);
         }
 
         private void WriteByte(int value)
         {
-            gifStream.WriteByte(Convert.ToByte(value));
+            GifStream.WriteByte(Convert.ToByte(value));
         }
 
         private void WriteShort(int value)
         {
-            gifStream.WriteByte(Convert.ToByte(value & 0xff));
-            gifStream.WriteByte(Convert.ToByte((value >> 8) & 0xff));
+            GifStream.WriteByte(Convert.ToByte(value & 0xff));
+            GifStream.WriteByte(Convert.ToByte((value >> 8) & 0xff));
         }
 
         private async Task WriteString(string value)
         {
-            await gifStream.WriteAsync(value.ToArray().Select(c => (byte)c).ToArray(), 0, value.Length);
+            await GifStream.WriteAsync(value.ToArray().Select(c => (byte)c).ToArray(), 0, value.Length);
         }
     }
 }
