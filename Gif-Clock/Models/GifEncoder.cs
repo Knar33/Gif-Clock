@@ -57,7 +57,7 @@ namespace GifClock
                 WriteByte(globalColorTable[i].B);
             }
             int colorsRequired = (int)Math.Pow(2, (GlobalColorTableSize + 1));
-            for (int i = globalColorTable.Count; i <= colorsRequired; i++)
+            for (int i = globalColorTable.Count; i < colorsRequired; i++)
             {
                 WriteByte(0);
                 WriteByte(0);
