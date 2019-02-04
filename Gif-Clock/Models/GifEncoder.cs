@@ -12,6 +12,7 @@ namespace GifClock
     public class GifEncoder
     {
         public Stream gifStream { get; set; }
+        public int GlobalColorTableSize { get; set; }
 
         public GifEncoder(Stream inputStream, int width, int height, List<Color> globalColorTable)
         {
@@ -49,15 +50,15 @@ namespace GifClock
                 packedFieldValue += 128;
             }
 
-            int globalColorTableSize = 0;
+            GlobalColorTableSize = 0;
             for (int p = 1; p < 8; p++)
             {
                 if (colorCount > Math.Pow(2, p))
                 {
-                    globalColorTableSize++;
+                    GlobalColorTableSize++;
                 }
             }
-            packedFieldValue += globalColorTableSize;
+            packedFieldValue += GlobalColorTableSize;
 
             WriteByte(packedFieldValue);
         }
