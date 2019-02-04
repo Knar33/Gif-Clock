@@ -13,8 +13,8 @@ namespace GifClock
             Image image = new Bitmap(62, 18);
             Graphics drawing = Graphics.FromImage(image);
             Font font = new Font("Times New Roman", 12.0f);
-            Color textColor = Color.FromArgb(255, 255, 255);
-            Color backgroundColor = Color.FromArgb(0, 0, 0);
+            Color backgroundColor = Color.FromArgb(255, 255, 255);
+            Color textColor = Color.FromArgb(0, 0, 0);
 
             drawing = Graphics.FromImage(image);
             drawing.Clear(backgroundColor);
