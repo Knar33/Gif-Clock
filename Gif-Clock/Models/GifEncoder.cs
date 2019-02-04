@@ -13,6 +13,7 @@ namespace GifClock
     {
         public Stream gifStream { get; set; }
         public int GlobalColorTableSize { get; set; }
+        public bool GlobalColorTableIndicator { get; set; }
 
         public GifEncoder(Stream inputStream, int width, int height, List<Color> globalColorTable)
         {
@@ -24,43 +25,35 @@ namespace GifClock
             //Header
             Task.Run(() => WriteString("GIF89a")).Wait();
 
-            //Logican Screen Descriptor
+            //Logical Screen Descriptor
             WriteShort(width); //Canvas Width
             WriteShort(height); //Canvas Height
-            GeneratePackedField(globalColorTable.Count); //Packed Field
-            WriteByte(0); //Background Color Index
-            WriteByte(0); //Pixel Aspect Ratio
-
-            //Global Color Table
-        }
-
-        public async Task AddFrame(Image frame)
-        {
-        }
-
-        private void GeneratePackedField(int colorCount)
-        {
-            //The first bit is the Global Color Table Flag
-            //The next 3 bits are the Color Resolution, which I am setting to 1
-            //The next is the sort flag. It will always be zero for this
-            //The last 3 bits are the Global Color Table Size. The real size of the table is 2^(n+1) where n is the Global Color Table Size.
+            //Packed Field
             int packedFieldValue = 16;
-            if (colorCount > 0)
+            if (globalColorTable.Count > 0)
             {
+                GlobalColorTableIndicator = true;
                 packedFieldValue += 128;
             }
-
             GlobalColorTableSize = 0;
             for (int p = 1; p < 8; p++)
             {
-                if (colorCount > Math.Pow(2, p))
+                if (globalColorTable.Count > Math.Pow(2, p))
                 {
                     GlobalColorTableSize++;
                 }
             }
             packedFieldValue += GlobalColorTableSize;
-
             WriteByte(packedFieldValue);
+            WriteByte(0); //Background Color Index
+            WriteByte(0); //Pixel Aspect Ratio
+
+            //Global Color Table
+
+        }
+
+        public async Task AddFrame(Image frame)
+        {
         }
 
         private void WriteByte(int value)
