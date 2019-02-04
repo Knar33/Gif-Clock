@@ -84,7 +84,7 @@ namespace GifClock
             using (var gifStream = new MemoryStream())
             {
                 frame.Save(gifStream, ImageFormat.Gif);
-                gifStream.Position = 789; 
+                gifStream.Position = 789; //Position of the Image Descriptor
                 var header = new byte[11];
                 gifStream.Read(header, 0, header.Length);
                 WriteByte(header[0]);
@@ -104,7 +104,7 @@ namespace GifClock
                     gifStream.Read(imgData, 0, dataLength);
 
                     gifStream.WriteByte(Convert.ToByte(dataLength));
-                    gifStream.Write(imgData, 0, dataLength);
+                    await gifStream.WriteAsync(imgData, 0, dataLength);
                     dataLength = gifStream.ReadByte();
                 }
 

@@ -25,11 +25,11 @@ namespace GifClock
                 while (true)
                 {
                     //Generate clock Image frame
-                    var black = Image.FromFile(@"C:\Users\Andrew\Documents\GitHub\Gif-Clock\black.png");
-                    await encoder.AddFrame(black, 0, 0);
-                    Thread.Sleep(1000);
                     var white = Image.FromFile(@"C:\Users\Andrew\Documents\GitHub\Gif-Clock\white.png");
                     await encoder.AddFrame(white, 0, 0);
+                    Thread.Sleep(1000);
+                    var black = Image.FromFile(@"C:\Users\Andrew\Documents\GitHub\Gif-Clock\black.png");
+                    await encoder.AddFrame(black, 0, 0);
                     Thread.Sleep(1000);
                 }
             }
