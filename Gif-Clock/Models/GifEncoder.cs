@@ -17,6 +17,7 @@ namespace GifClock
 
         public GifEncoder(Stream inputStream, int width, int height, List<Color> globalColorTable)
         {
+            //TODO: allow no globalColorTable to be passed in?
             if (globalColorTable.Count > 256)
             {
                 globalColorTable = globalColorTable.Take(256).ToList();
@@ -50,18 +51,21 @@ namespace GifClock
             WriteByte(0); //Pixel Aspect Ratio
 
             //Global Color Table
-            for (int i = 0; i < globalColorTable.Count; i++)
+            if (GlobalColorTableIndicator)
             {
-                WriteByte(globalColorTable[i].R);
-                WriteByte(globalColorTable[i].G);
-                WriteByte(globalColorTable[i].B);
-            }
-            int colorsRequired = (int)Math.Pow(2, (GlobalColorTableSize + 1));
-            for (int i = globalColorTable.Count; i < colorsRequired; i++)
-            {
-                WriteByte(0);
-                WriteByte(0);
-                WriteByte(0);
+                for (int i = 0; i < globalColorTable.Count; i++)
+                {
+                    WriteByte(globalColorTable[i].R);
+                    WriteByte(globalColorTable[i].G);
+                    WriteByte(globalColorTable[i].B);
+                }
+                int colorsRequired = (int)Math.Pow(2, (GlobalColorTableSize + 1));
+                for (int i = globalColorTable.Count; i < colorsRequired; i++)
+                {
+                    WriteByte(0);
+                    WriteByte(0);
+                    WriteByte(0);
+                }
             }
         }
 
