@@ -21,10 +21,15 @@ namespace GifClock
                 globalColorTable.Add(Color.FromArgb(255, 255, 255));
 
                 GifEncoder encoder = new GifEncoder(outputStream, 1, 1, globalColorTable);
+
                 while (true)
                 {
                     //Generate clock Image frame
-                    //await encoder.AddFrame();
+                    var black = Image.FromFile(@"C:\Users\Andrew\Documents\GitHub\Gif-Clock\black.png");
+                    await encoder.AddFrame(black, 0, 0);
+                    Thread.Sleep(1000);
+                    var white = Image.FromFile(@"C:\Users\Andrew\Documents\GitHub\Gif-Clock\white.png");
+                    await encoder.AddFrame(white, 0, 0);
                     Thread.Sleep(1000);
                 }
             }
