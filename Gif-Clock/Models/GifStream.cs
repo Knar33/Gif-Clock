@@ -16,7 +16,7 @@ namespace GifClock
         {
             try
             {
-                GifEncoder encoder = new GifEncoder(outputStream, 100, 100);
+                GifEncoder encoder = new GifEncoder(outputStream, 18, 62);
 
                 while (true)
                 {

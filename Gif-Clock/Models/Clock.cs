@@ -10,7 +10,7 @@ namespace GifClock
     {
         public static Image GenerateTime()
         {
-            Image image = new Bitmap(100, 100);
+            Image image = new Bitmap(62, 18);
             Graphics drawing = Graphics.FromImage(image);
             Font font = new Font("Times New Roman", 12.0f);
             Color textColor = Color.FromArgb(255, 255, 255);

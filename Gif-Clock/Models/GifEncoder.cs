@@ -39,7 +39,6 @@ namespace GifClock
 
         public async Task AddFrame(Image frame, int x, int y)
         {
-            var b = frame.PixelFormat;
             using (var sourceGif = new MemoryStream())
             {
                 frame.Save(sourceGif, ImageFormat.Gif);
@@ -49,8 +48,8 @@ namespace GifClock
                 WriteByte(header[0]);
                 WriteShort(x);
                 WriteShort(y);
-                WriteShort(frame.Height);
                 WriteShort(frame.Width);
+                WriteShort(frame.Height);
 
                 sourceGif.Position = 10;
                 WriteByte(sourceGif.ReadByte() & 0x3f | 0x80); // Enabling local color table
