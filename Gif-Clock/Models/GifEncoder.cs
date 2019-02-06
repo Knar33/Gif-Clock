@@ -14,17 +14,17 @@ namespace GifClock
         public Stream GifStream { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
+        private bool FirstFrame { get; set; }
 
         public GifEncoder(Stream inputStream, int width, int height)
         {
             Width = width;
             Height = height;
             GifStream = inputStream;
-
-            GenerateHeader();
+            FirstFrame = true;
         }
 
-        private void GenerateHeader()
+        private void GenerateHeader(MemoryStream firstFrameStream)
         {
             //Header Block
             Task.Run(() => WriteString("GIF89a")).Wait();
@@ -32,9 +32,11 @@ namespace GifClock
             //Logical Screen Descriptor
             WriteShort(Width); //Canvas Width
             WriteShort(Height); //Canvas Height
-            WriteByte(16); //Packed Field
+            firstFrameStream.Position = 10;
+            WriteByte(firstFrameStream.ReadByte()); // Global Color Table Info
             WriteByte(0); //Background Color Index
             WriteByte(0); //Pixel Aspect Ratio
+            WriteColorTable(firstFrameStream);
         }
 
         public async Task AddFrame(Image frame, int x, int y)
@@ -42,6 +44,11 @@ namespace GifClock
             using (var sourceGif = new MemoryStream())
             {
                 frame.Save(sourceGif, ImageFormat.Gif);
+                if (FirstFrame)
+                {
+                    GenerateHeader(sourceGif);
+                    FirstFrame = false;
+                }
                 sourceGif.Position = 789; //Position of the Image Descriptor
                 var header = new byte[11];
                 sourceGif.Read(header, 0, header.Length);
@@ -51,9 +58,7 @@ namespace GifClock
                 WriteShort(frame.Width);
                 WriteShort(frame.Height);
 
-                sourceGif.Position = 10;
-                WriteByte(sourceGif.ReadByte() & 0x3f | 0x80); // Enabling local color table
-                WriteColorTable(sourceGif);
+                WriteByte(header[9] & 0x07 | 0x07);
 
                 WriteByte(header[10]); //LZW
 
