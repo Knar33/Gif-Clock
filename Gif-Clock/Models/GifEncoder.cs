@@ -22,11 +22,11 @@ namespace GifClock
             FirstFrame = true;
         }
 
-        private void GenerateHeader(MemoryStream firstFrameStream)
+        private void GenerateHeader(MemoryStream firstFrame)
         {
-            firstFrameStream.Position = 0;
-            var header = new byte[781];
-            firstFrameStream.Read(header, 0, header.Length);
+            firstFrame.Position = 0;
+            var header = new byte[781]; // Header Block + Logical Screen Descriptor + max Global Color Table size
+            firstFrame.Read(header, 0, header.Length);
             GifStream.Write(header, 0, header.Length);
         }
 
@@ -48,12 +48,10 @@ namespace GifClock
                 WriteShort(y);
                 WriteShort(frame.Width);
                 WriteShort(frame.Height);
+                WriteByte(header[9] & 0x07 | 0x07); //This disables Local Color Table
+                WriteByte(header[10]); //LZW Minimum Code Size
 
-                WriteByte(header[9] & 0x07 | 0x07);
-
-                WriteByte(header[10]); //LZW
-
-                // Read/Write image data
+                // Read image data
                 sourceImage.Position = 800;
                 var dataLength = sourceImage.ReadByte();
                 while (dataLength > 0)
@@ -66,7 +64,7 @@ namespace GifClock
                     dataLength = sourceImage.ReadByte();
                 }
 
-                GifStream.WriteByte(0); // Terminator
+                GifStream.WriteByte(0);
             }
 
         }
