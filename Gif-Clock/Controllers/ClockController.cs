@@ -11,7 +11,7 @@ namespace GifClock.Controllers
 {
     public class ClockController : ApiController
     {
-        public HttpResponseMessage Get(string timeZone = "UTC")
+        public HttpResponseMessage Get(string timeZone = "Central Standard Time")
         {
             var response = Request.CreateResponse();
             GifStream gifStream = new GifStream(new Clock(timeZone), 1000);
