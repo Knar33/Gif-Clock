@@ -7,9 +7,19 @@ using System.Web;
 
 namespace GifClock
 {
-    public class Clock
+    public class Clock : IGenerator
     {
-        public static Image GenerateTime()
+        public Clock()
+        {
+
+        }
+
+        public Clock(string timeZone)
+        {
+
+        }
+
+        public Image GenerateImage()
         {
             Image image = new Bitmap(62, 18);
             Font font = new Font("Times New Roman", 12.0f);
