@@ -23,7 +23,7 @@ namespace GifClock
         {
             try
             {
-                GifEncoder encoder = new GifEncoder(outputStream, 62, 18);
+                GifEncoder encoder = new GifEncoder(outputStream);
 
                 while (true)
                 {
@@ -33,7 +33,6 @@ namespace GifClock
             }
             catch (Exception ex)
             {
-                //ShakeItOff(ex);
             }
             finally
             {

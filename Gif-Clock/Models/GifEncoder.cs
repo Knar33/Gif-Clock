@@ -16,42 +16,33 @@ namespace GifClock
         private int Height { get; set; }
         private bool FirstFrame { get; set; }
 
-        public GifEncoder(Stream inputStream, int width, int height)
+        public GifEncoder(Stream inputStream)
         {
-            Width = width;
-            Height = height;
             GifStream = inputStream;
             FirstFrame = true;
         }
 
         private void GenerateHeader(MemoryStream firstFrameStream)
         {
-            //Header Block
-            Task.Run(() => WriteString("GIF89a")).Wait();
-
-            //Logical Screen Descriptor
-            WriteShort(Width); //Canvas Width
-            WriteShort(Height); //Canvas Height
-            firstFrameStream.Position = 10;
-            WriteByte(firstFrameStream.ReadByte()); // Global Color Table Info
-            WriteByte(0); //Background Color Index
-            WriteByte(0); //Pixel Aspect Ratio
-            WriteColorTable(firstFrameStream);
+            firstFrameStream.Position = 0;
+            var header = new byte[781];
+            firstFrameStream.Read(header, 0, header.Length);
+            GifStream.Write(header, 0, header.Length);
         }
 
         public async Task AddFrame(Image frame, int x, int y)
         {
-            using (var sourceGif = new MemoryStream())
+            using (var sourceImage = new MemoryStream())
             {
-                frame.Save(sourceGif, ImageFormat.Gif);
+                frame.Save(sourceImage, ImageFormat.Gif);
                 if (FirstFrame)
                 {
-                    GenerateHeader(sourceGif);
+                    GenerateHeader(sourceImage);
                     FirstFrame = false;
                 }
-                sourceGif.Position = 789; //Position of the Image Descriptor
+                sourceImage.Position = 789; //Position of the Image Descriptor
                 var header = new byte[11];
-                sourceGif.Read(header, 0, header.Length);
+                sourceImage.Read(header, 0, header.Length);
                 WriteByte(header[0]);
                 WriteShort(x);
                 WriteShort(y);
@@ -63,29 +54,21 @@ namespace GifClock
                 WriteByte(header[10]); //LZW
 
                 // Read/Write image data
-                sourceGif.Position = 800;
-                var dataLength = sourceGif.ReadByte();
+                sourceImage.Position = 800;
+                var dataLength = sourceImage.ReadByte();
                 while (dataLength > 0)
                 {
                     var imgData = new byte[dataLength];
-                    sourceGif.Read(imgData, 0, dataLength);
+                    sourceImage.Read(imgData, 0, dataLength);
 
                     GifStream.WriteByte(Convert.ToByte(dataLength));
                     await GifStream.WriteAsync(imgData, 0, dataLength);
-                    dataLength = sourceGif.ReadByte();
+                    dataLength = sourceImage.ReadByte();
                 }
 
                 GifStream.WriteByte(0); // Terminator
             }
 
-        }
-
-        private void WriteColorTable(Stream sourceGif)
-        {
-            sourceGif.Position = 13; // Locating the image color table
-            var colorTable = new byte[768];
-            sourceGif.Read(colorTable, 0, colorTable.Length);
-            GifStream.Write(colorTable, 0, colorTable.Length);
         }
 
         private void WriteByte(int value)
