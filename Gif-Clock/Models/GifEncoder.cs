@@ -14,12 +14,13 @@ namespace GifClock
         public Stream GifStream { get; set; }
         private int Width { get; set; }
         private int Height { get; set; }
-        private bool FirstFrame { get; set; }
+        private bool FirstFrame = true;
+        private bool UseLocalColorTable;
 
-        public GifEncoder(Stream inputStream)
+        public GifEncoder(Stream inputStream, bool useLocalColorTable = false)
         {
             GifStream = inputStream;
-            FirstFrame = true;
+            UseLocalColorTable = useLocalColorTable;
         }
 
         private void GenerateHeader(MemoryStream firstFrame)
@@ -48,7 +49,18 @@ namespace GifClock
                 WriteShort(y);
                 WriteShort(frame.Width);
                 WriteShort(frame.Height);
-                WriteByte(header[9] & 0x07 | 0x07); //This disables Local Color Table
+
+                if (UseLocalColorTable)
+                {
+                    sourceImage.Position = 10;
+                    WriteByte(sourceImage.ReadByte() & 0x3f | 0x80);
+                    WriteColorTable(sourceImage);
+                }
+                else
+                {
+                    WriteByte(header[9] & 0x07 | 0x07);
+                }
+
                 WriteByte(header[10]); //LZW Minimum Code Size
 
                 // Read image data
@@ -67,6 +79,14 @@ namespace GifClock
                 GifStream.WriteByte(0);
             }
 
+        }
+
+        private void WriteColorTable(MemoryStream sourceImage)
+        {
+            sourceImage.Position = 13;
+            var header = new byte[768];
+            sourceImage.Read(header, 0, header.Length);
+            GifStream.Write(header, 0, header.Length);
         }
 
         private void WriteByte(int value)
