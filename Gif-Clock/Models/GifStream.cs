@@ -12,7 +12,14 @@ namespace GifClock
 {
     public class GifStream
     {
-        public static async void WriteToStream(Stream outputStream, HttpContent content, TransportContext context)
+        public IGenerator ImageGenerator { get; set; }
+
+        public GifStream(IGenerator imageGenerator)
+        {
+            ImageGenerator = imageGenerator;
+        }
+
+        public async void WriteToStream(Stream outputStream, HttpContent content, TransportContext context)
         {
             try
             {
@@ -20,8 +27,7 @@ namespace GifClock
 
                 while (true)
                 {
-                    //Generate clock Image frame
-                    await encoder.AddFrame(Clock.GenerateTime(), 0, 0);
+                    await encoder.AddFrame(ImageGenerator.GenerateImage(), 0, 0);
                     Thread.Sleep(1000);
                 }
             }
