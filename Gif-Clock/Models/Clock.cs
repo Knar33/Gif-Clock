@@ -19,7 +19,7 @@ namespace GifClock
             }
             catch (Exception ex)
             {
-                TimeZoneInfo.FindSystemTimeZoneById("UTC");
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById("UTC");
             }
         }
 
@@ -34,8 +34,7 @@ namespace GifClock
             drawing.Clear(backgroundColor);
             Brush textBrush = new SolidBrush(textColor);
             
-            //TODO: Dynamic Time based on TimeZone passed into constructor
-            drawing.DrawString(DateTime.Now.ToString("HH:mm:ss"), font, textBrush, 0, 0);
+            drawing.DrawString(TimeZoneInfo.ConvertTime(DateTime.Now, timeZoneInfo).ToString("HH:mm:ss"), font, textBrush, 0, 0);
 
             drawing.Save();
             textBrush.Dispose();
