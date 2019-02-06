@@ -17,7 +17,7 @@ namespace GifClock
         private bool FirstFrame = true;
         private bool UseLocalColorTable;
 
-        public GifEncoder(Stream inputStream, bool useLocalColorTable = false)
+        public GifEncoder(Stream inputStream, bool useLocalColorTable)
         {
             GifStream = inputStream;
             UseLocalColorTable = useLocalColorTable;

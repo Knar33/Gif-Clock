@@ -14,18 +14,20 @@ namespace GifClock
     {
         public IGenerator ImageGenerator { get; set; }
         public int DelayTime { get; set; }
+        private bool UseLocalColorTable;
 
-        public GifStream(IGenerator imageGenerator, int delayTime)
+        public GifStream(IGenerator imageGenerator, int delayTime, bool useLocalColorTable = false)
         {
             ImageGenerator = imageGenerator;
             DelayTime = delayTime;
+            UseLocalColorTable = useLocalColorTable;
         }
 
         public async void WriteToStream(Stream outputStream, HttpContent content, TransportContext context)
         {
             try
             {
-                GifEncoder encoder = new GifEncoder(outputStream);
+                GifEncoder encoder = new GifEncoder(outputStream, UseLocalColorTable);
 
                 while (true)
                 {
