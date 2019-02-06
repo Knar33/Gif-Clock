@@ -14,8 +14,7 @@ namespace GifClock.Controllers
         public HttpResponseMessage Get()
         {
             var response = Request.CreateResponse();
-            Clock clock = new Clock();
-            GifStream gifStream = new GifStream(clock);
+            GifStream gifStream = new GifStream(new Clock());
             Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
             response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("image/gif"));
 
@@ -25,8 +24,7 @@ namespace GifClock.Controllers
         public HttpResponseMessage Get(string timeZone)
         {
             var response = Request.CreateResponse();
-            Clock clock = new Clock(timeZone);
-            GifStream gifStream = new GifStream(clock);
+            GifStream gifStream = new GifStream(new Clock(timeZone));
             Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
             response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("image/gif"));
 
