@@ -11,17 +11,7 @@ namespace GifClock.Controllers
 {
     public class ClockController : ApiController
     {
-        public HttpResponseMessage Get()
-        {
-            var response = Request.CreateResponse();
-            GifStream gifStream = new GifStream(new Clock(), 1000);
-            Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
-            response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("image/gif"));
-
-            return response;
-        }
-
-        public HttpResponseMessage Get(string timeZone)
+        public HttpResponseMessage Get(string timeZone = "UTC")
         {
             var response = Request.CreateResponse();
             GifStream gifStream = new GifStream(new Clock(timeZone), 1000);

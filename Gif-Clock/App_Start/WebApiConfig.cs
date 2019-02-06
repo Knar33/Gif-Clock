@@ -13,8 +13,8 @@ namespace GifClock
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "{controller}/{id}",
-                defaults: new { controller = "Clock", id = RouteParameter.Optional }
+                routeTemplate: "{controller}/{timeZone}",
+                defaults: new { controller = "Clock", timeZone = RouteParameter.Optional }
             );
         }
     }

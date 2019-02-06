@@ -9,14 +9,18 @@ namespace GifClock
 {
     public class Clock : IGenerator
     {
-        public Clock()
-        {
-
-        }
+        public TimeZoneInfo timeZoneInfo { get; set; }
 
         public Clock(string timeZone)
         {
-
+            try
+            {
+                timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZone);
+            }
+            catch (Exception ex)
+            {
+                TimeZoneInfo.FindSystemTimeZoneById("UTC");
+            }
         }
 
         public Image GenerateImage()
@@ -29,7 +33,8 @@ namespace GifClock
             Graphics drawing = Graphics.FromImage(image);
             drawing.Clear(backgroundColor);
             Brush textBrush = new SolidBrush(textColor);
-
+            
+            //TODO: Dynamic Time based on TimeZone passed into constructor
             drawing.DrawString(DateTime.Now.ToString("HH:mm:ss"), font, textBrush, 0, 0);
 
             drawing.Save();
