@@ -1,4 +1,4 @@
-Gif Clock
+Gif Clock Http://gifclock.somee.com/
 
 The idea of the GIF Clock is to create an endless streaming GIF with .NET MVC which displays the current time. These are the major milestones in order to accomplish this task:
 
