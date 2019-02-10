@@ -9,10 +9,10 @@ namespace GifClock
 {
     public class GameGenerator : IGenerator
     {
-        public Image GenerateImage()
+        public List<GifFrame> GenerateImage()
         {
             Image image = new Bitmap(1, 1);
-            return image;
+            return new List<GifFrame>() { new GifFrame(image, 0, 0) };
         }
     }
 }

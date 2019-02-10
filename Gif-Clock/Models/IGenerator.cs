@@ -8,6 +8,6 @@ namespace GifClock
 {
     public interface IGenerator
     {
-        Image GenerateImage();
+        List<GifFrame> GenerateImage();
     }
 }

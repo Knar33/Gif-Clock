@@ -23,7 +23,7 @@ namespace GifClock
             }
         }
 
-        public Image GenerateImage()
+        public List<GifFrame> GenerateImage()
         {
             Image image = new Bitmap(62, 18);
             Font font = new Font("Calibri", 12.0f);
@@ -42,7 +42,7 @@ namespace GifClock
             textBrush.Dispose();
             drawing.Dispose();
 
-            return image;
+            return new List<GifFrame>() { new GifFrame(image, 0, 0) };
         }
     }
 }
