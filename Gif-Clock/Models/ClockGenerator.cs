@@ -25,6 +25,8 @@ namespace GifClock
 
         public List<GifFrame> GenerateImage()
         {
+            List<GifFrame> gifFrames = new List<GifFrame>();
+
             Image image = new Bitmap(62, 18);
             Font font = new Font("Calibri", 12.0f);
             Color textColor = Color.FromArgb(255, 255, 255);
@@ -42,7 +44,8 @@ namespace GifClock
             textBrush.Dispose();
             drawing.Dispose();
 
-            return new List<GifFrame>() { new GifFrame(image, 0, 0) };
+            gifFrames.Add(new GifFrame(image, 0, 0));
+            return gifFrames;
         }
     }
 }
