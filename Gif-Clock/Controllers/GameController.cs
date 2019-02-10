@@ -7,14 +7,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 
-namespace GifClock.Controllers
+namespace GifClock
 {
-    public class ClockController : ApiController
+    public class GameController : ApiController
     {
-        public HttpResponseMessage Get(string timeZone = "Central Standard Time")
+        public HttpResponseMessage Get()
         {
             var response = Request.CreateResponse();
-            GifStream gifStream = new GifStream(new ClockGenerator(timeZone), 1000, false);
+            GifStream gifStream = new GifStream(new ClockGenerator(), 1000, false);
             Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
             response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("image/gif"));
 

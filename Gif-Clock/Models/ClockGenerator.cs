@@ -7,11 +7,11 @@ using System.Web;
 
 namespace GifClock
 {
-    public class Clock : IGenerator
+    public class ClockGenerator : IGenerator
     {
         public TimeZoneInfo timeZoneInfo { get; set; }
 
-        public Clock(string timeZone)
+        public ClockGenerator(string timeZone)
         {
             try
             {
