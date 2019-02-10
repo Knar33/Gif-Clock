@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web.Http;
 
-namespace GifClock.Controllers
+namespace GifClock
 {
     public class ClockController : ApiController
     {
