@@ -157,8 +157,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\GameGenerator.cs" />
     <Compile Include="Models\IGenerator.cs" />
-    <Compile Include="Models\Clock.cs" />
+    <Compile Include="Models\ClockGenerator.cs" />
     <Compile Include="Models\GifEncoder.cs" />
     <Compile Include="Models\GifStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
