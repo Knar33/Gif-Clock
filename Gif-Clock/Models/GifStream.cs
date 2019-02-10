@@ -31,8 +31,10 @@ namespace GifClock
 
                 while (true)
                 {
-                    //TODO: return x, y offset from ImageGenerator, instead of hardcoding to 0,0
-                    await encoder.AddFrame(ImageGenerator.GenerateImage(), 0, 0);
+                    foreach (GifFrame image in ImageGenerator.GenerateImage())
+                    {
+                        await encoder.AddFrame(image.Frame, image.XOffset, image.YOffset);
+                    }
                     Thread.Sleep(DelayTime);
                 }
             }

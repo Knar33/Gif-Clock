@@ -14,7 +14,7 @@ namespace GifClock
         public HttpResponseMessage Get()
         {
             var response = Request.CreateResponse();
-            GifStream gifStream = new GifStream(new ClockGenerator(), 1000, false);
+            GifStream gifStream = new GifStream(new GameGenerator(), 1000, false);
             Action<Stream, HttpContent, TransportContext> writeToStream = gifStream.WriteToStream;
             response.Content = new PushStreamContent(writeToStream, new MediaTypeHeaderValue("image/gif"));
 
